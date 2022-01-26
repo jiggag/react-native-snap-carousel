@@ -61,6 +61,7 @@ export default class Carousel extends Component {
         scrollEnabled: PropTypes.bool,
         scrollInterpolator: PropTypes.func,
         slideInterpolatedStyle: PropTypes.func,
+        easing: PropTypes.func,
         slideStyle: ViewPropTypes ? ViewPropTypes.style : View.propTypes.style,
         shouldOptimizeUpdates: PropTypes.bool,
         swipeThreshold: PropTypes.number,
@@ -624,7 +625,7 @@ export default class Carousel extends Component {
 
     _getSlideAnimation (index, toValue) {
         const { interpolators } = this.state;
-        const { activeAnimationType, activeAnimationOptions } = this.props;
+        const { activeAnimationType, activeAnimationOptions, easing = Easing.linear } = this.props;
 
         const animatedValue = interpolators && interpolators[index];
 
@@ -642,11 +643,11 @@ export default class Carousel extends Component {
         return Animated.parallel([
             Animated['timing'](
                 animatedValue,
-                { ...animationCommonOptions, easing: Easing.linear }
+                { ...animationCommonOptions, easing }
             ),
             Animated[activeAnimationType](
                 animatedValue,
-                { ...animationCommonOptions }
+                { ...animationCommonOptions, easing }
             )
         ]);
     }
